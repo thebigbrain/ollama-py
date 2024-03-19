@@ -1,10 +1,9 @@
-import os
-import sys
 from PyQt6.QtWidgets import QLabel, QWidget, QMenu
 from PyQt6.QtGui import QPixmap, QBitmap, QPainter
 from PyQt6.QtCore import Qt
-from PyQt6.QtCore import QRect
 from xlab.views.app import AppContext
+from xlab.core.resources import get_resource
+from xlab.views.chat_input import ChatInputBox
 
 
 class FloatingIcon(QWidget):
@@ -26,7 +25,7 @@ class FloatingIcon(QWidget):
         self.setWindowTitle("XLab")
 
     def _loadIcon(self):
-        icon_path = self._getIconPath()
+        icon_path = get_resource("logo.png")
         pixmap = QPixmap(icon_path)
         if pixmap.isNull():
             print("Unable to load icon:", icon_path)
@@ -39,12 +38,6 @@ class FloatingIcon(QWidget):
 
         self.show()
 
-    def _getIconPath(self):
-        base_dir = getattr(
-            sys, "_MEIPASS", os.path.dirname(os.path.abspath(__package__))
-        )
-        return os.path.join(base_dir, "assets", "logo.png")
-
     def _applyCircleMaskToPixmap(self, pixmap):
         mask = QBitmap(pixmap.size())
         mask.fill(Qt.GlobalColor.transparent)
@@ -55,6 +48,11 @@ class FloatingIcon(QWidget):
         painter.end()
         pixmap.setMask(mask)
         return pixmap
+
+    def showChatInput(self):
+        # 显示聊天输入框
+        self.chat_input_box = ChatInputBox(self)
+        self.chat_input_box.show()
 
     # 实现图标的点击和拖动功能
     def mousePressEvent(self, event):
@@ -69,6 +67,7 @@ class FloatingIcon(QWidget):
     def mouseMoveEvent(self, event):
         if Qt.MouseButton.LeftButton and self.m_drag:
             self.move(event.globalPosition().toPoint() - self.m_dragPosition)
+            self.showChatInput()
             event.accept()
 
     def mouseReleaseEvent(self, event):
