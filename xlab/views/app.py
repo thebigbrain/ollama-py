@@ -29,7 +29,6 @@ class AppContext:
     def ensure_single_instance(cls) -> "AppContext":
         """确保全局只有一个AppContext实例"""
         cls()
-        _ = cls._instance.application
         return cls._instance
 
 
