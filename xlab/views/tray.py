@@ -10,8 +10,7 @@ def create_tray_icon(app: QApplication):
     )  # 请确保 icon.png 文件在您的脚本目录中
 
     # 创建系统托盘图标
-    tray_icon = QSystemTrayIcon(app)
-    tray_icon.setIcon(icon)
+    tray_icon = QSystemTrayIcon(icon, parent=app)
     tray_icon.setVisible(True)
 
     # 创建右键菜单
