@@ -1,20 +1,20 @@
-from PyQt6.QtWidgets import QLabel, QWidget, QMenu
+from PyQt6.QtWidgets import QLabel, QWidget, QApplication, QMenu
 from PyQt6.QtGui import QPixmap, QBitmap, QPainter
-from PyQt6.QtCore import Qt
-from xlab.views.app import AppContext
+from PyQt6.QtCore import Qt, QPoint
 from xlab.core.resources import get_resource
 from xlab.views.chat_input import ChatInputBox
 
 
 class FloatingIcon(QWidget):
-    def __init__(self, app_context: AppContext):
+    def __init__(self, app: QApplication):
         super().__init__()
-        self.app_context = app_context
+        self.app = app
         self.initUI()
 
     def initUI(self):
         self._setupWindow()
         self._loadIcon()
+        self.moveToBottomRight()
 
     def _setupWindow(self):
         self.setWindowFlags(
@@ -37,6 +37,15 @@ class FloatingIcon(QWidget):
         label.setFixedSize(pixmap.size())
 
         self.show()
+
+    def moveToBottomRight(self):
+        # 获得屏幕尺寸
+        screen_size = self.app.primaryScreen().availableGeometry()
+        # 计算窗口在右下角时的新position
+        new_x = screen_size.right() - self.width() - 16
+        new_y = screen_size.bottom() - self.height() - 32
+        # 移动窗口到新位置
+        self.move(QPoint(new_x, new_y))
 
     def _applyCircleMaskToPixmap(self, pixmap):
         mask = QBitmap(pixmap.size())
@@ -67,7 +76,7 @@ class FloatingIcon(QWidget):
     def mouseMoveEvent(self, event):
         if Qt.MouseButton.LeftButton and self.m_drag:
             self.move(event.globalPosition().toPoint() - self.m_dragPosition)
-            self.showChatInput()
+            # self.showChatInput()
             event.accept()
 
     def mouseReleaseEvent(self, event):
@@ -76,13 +85,13 @@ class FloatingIcon(QWidget):
 
     def contextMenuEvent(self, event):
         menu = QMenu(self)
-        action = menu.addAction("退出登录")
-        action.triggered.connect(self.handle_menu_item_1)
+        action = menu.addAction("退出应用")
+        action.triggered.connect(self._handle_exit_app)
         menu.exec(event.globalPos())
 
-    def handle_menu_item_1(self):
-        self.app_context.exit()
+    def _handle_exit_app(self):
+        self.app.exit()
 
 
-def create_floating_icon(app_context: AppContext):
-    return FloatingIcon(app_context)
+def create_floating_icon(app: QApplication):
+    return FloatingIcon(app)

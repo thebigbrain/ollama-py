@@ -1,11 +1,11 @@
-import sys
-from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QAction
-from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
+from PyQt6.QtGui import QIcon, QAction
+from xlab.core.resources import get_resource
 
 
 def create_tray_icon(app: QApplication):
     # 创建一个图标对象
-    icon = QIcon("assets/logo.jpeg")  # 请确保 icon.png 文件在您的脚本目录中
+    icon = QIcon(get_resource("logo.png"))  # 请确保 icon.png 文件在您的脚本目录中
 
     # 创建系统托盘图标
     tray_icon = QSystemTrayIcon(app)
