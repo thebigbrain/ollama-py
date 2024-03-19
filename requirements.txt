@@ -1,0 +1,3 @@
+llama-cpp-python -C cmake.args="-DLLAMA_BLAS=ON;-DLLAMA_BLAS_VENDOR=OpenBLAS"
+kp
+PyQt6
