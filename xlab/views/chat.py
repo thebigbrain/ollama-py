@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QKeyEvent
+from xlab.chat.message import MessageStream
 
 
 class MyLineEdit(QLineEdit):
@@ -29,10 +30,11 @@ class ChatFloatingWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
+        self.stream = MessageStream()
 
     def initUI(self):
         # 设置窗口标题和大小
-        self.setWindowTitle("Chat Floating Box")
+        self.setWindowTitle("AI助理")
         self.setFixedSize(300, 400)
         self.setWindowFlags(
             self.windowFlags() | Qt.WindowType.Tool | Qt.WindowType.WindowStaysOnTopHint
@@ -62,6 +64,9 @@ class ChatFloatingWidget(QWidget):
         if message:
             self.messageInput.setText("")
             self.chatHistory.append("You: " + message)
+            self.stream.add_message(message=message)
+            for chunk in self.stream.send():
+                print(chunk["message"]["content"], end="", flush=True)
 
     def move_to_bottom_right(self):
         # 获取屏幕尺寸

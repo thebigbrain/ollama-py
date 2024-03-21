@@ -1,4 +1,4 @@
-from typing import List
+import sys
 from PyQt6.QtWidgets import QSystemTrayIcon, QMenu
 from PyQt6.QtGui import QIcon, QAction
 from PyQt6.QtCore import QObject
@@ -8,42 +8,39 @@ from xlab.core import icons
 ICON_PATH = icons.logo
 
 
-class ActionConfig:
-    title: str
-    onTrigger = None
+class SystemTrayIcon(QSystemTrayIcon):
+    def __init__(self, icon, parent=None):
+        super().__init__(icon, parent)
+        self.widget = parent
+        self.setToolTip(f"AI助理")
 
-    def __init__(self, title: str, onTrigger=None):
-        super()
+        menu = QMenu(parent)
+        open_action = QAction("Open", self)
+        open_action.triggered.connect(self.show_app)
+        menu.addAction(open_action)
+        quit_action = QAction("Quit", self)
+        quit_action.triggered.connect(sys.exit)
+        menu.addAction(quit_action)
+        self.setContextMenu(menu)
 
-        self.title = title
-        self.onTrigger = onTrigger
+        self.activated.connect(self.on_tray_activated)
+
+    def show_app(self):
+        self.widget.show()
+        self.widget.activateWindow()
+
+    def on_tray_activated(self, reason):
+        if reason == QSystemTrayIcon.ActivationReason.Trigger.DoubleClick:
+            self.show_app()
 
 
-def create_tray_icon(parent: QObject, actions: List[ActionConfig]):
+def create_tray_icon(parent: QObject):
     # 创建一个图标对象
     icon = QIcon(ICON_PATH)  # 请确保 icon.png 文件在您的脚本目录中
 
     # 创建系统托盘图标
-    tray_icon = QSystemTrayIcon(icon, parent=parent)
+    tray_icon = SystemTrayIcon(icon, parent=parent)
     tray_icon.setVisible(True)
-
-    # 创建右键菜单
-    menu = QMenu()
-
-    i = 0
-    for a in actions:
-        # 将动作添加到菜单
-        action: QAction = QAction(a.title, parent=menu)
-        action.triggered.connect(a.onTrigger)
-
-        menu.addAction(action)
-        if i < len(actions) - 1:
-            menu.addSeparator()  # 添加一个分隔线
-
-        i = i + 1
-
-    # 将菜单添加到托盘图标
-    tray_icon.setContextMenu(menu)
 
     # 显示系统托盘图标
     tray_icon.show()

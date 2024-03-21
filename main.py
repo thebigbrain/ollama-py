@@ -1,8 +1,7 @@
 from PyQt6.QtWidgets import (
     QApplication,
 )
-from xlab.views.tray import ActionConfig, create_tray_icon
-from xlab.views.main_win import MainWindow
+from xlab.views.tray import create_tray_icon
 from xlab.views.chat import ChatFloatingWidget
 
 
@@ -14,14 +13,11 @@ def main():
     window = ChatFloatingWidget()
 
     tray_icon = create_tray_icon(
-        parent=app,
-        actions=[
-            ActionConfig(title="显示", onTrigger=lambda: window.show()),
-            ActionConfig(title="退出", onTrigger=app.exit),
-        ],
+        parent=window,
     )
 
     window.show()
+    window.activateWindow()
 
     # 确保在退出时清理系统托盘图标
     app.aboutToQuit.connect(tray_icon.deleteLater)
