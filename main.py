@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import (
 )
 from xlab.views.tray import ActionConfig, create_tray_icon
 from xlab.views.main_win import MainWindow
+from xlab.views.chat import ChatFloatingWidget
 
 
 # 应用程序的主函数
@@ -10,12 +11,12 @@ def main():
     app = QApplication([])
 
     # 创建主窗口和布局
-    window = MainWindow()
+    window = ChatFloatingWidget()
 
     tray_icon = create_tray_icon(
         parent=app,
         actions=[
-            ActionConfig(title="显示", onTrigger=lambda: window.show_normal()),
+            ActionConfig(title="显示", onTrigger=lambda: window.show()),
             ActionConfig(title="退出", onTrigger=app.exit),
         ],
     )

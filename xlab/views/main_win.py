@@ -16,7 +16,7 @@ class MainWindow(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
+        self.setWindowFlag(self.windowFlags() | Qt.WindowType.Tool)
         # 设置窗口大小
         self.setFixedSize(300, 80)  # 假设窗口大小为300x200像素
         self.move_to_bottom_right()
@@ -57,7 +57,7 @@ class MainWindow(QWidget):
 
         # 计算窗口偏移位置
         xpos = screen_geom.width() - self.width() - 15
-        ypos = screen_geom.height() - self.height() - 50
+        ypos = screen_geom.height() - self.height() - 80
 
         # 移动窗口到右下角
         self.move(xpos, ypos)
