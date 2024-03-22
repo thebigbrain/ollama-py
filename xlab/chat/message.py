@@ -1,5 +1,27 @@
 from typing import Sequence
 import ollama
+from PyQt6.QtCore import QThread, pyqtSignal
+
+
+class MessageThread(QThread):
+    # 创建一个信号，当消息准备发送时发射
+    messageReady = pyqtSignal(str)
+    finished = pyqtSignal()
+
+    def __init__(self, message_stream, message):
+        super().__init__()
+        self.message_stream = message_stream
+        self.message = message
+
+    def run(self):
+        # 这个方法在新线程中运行
+        self.message_stream.add_message(self.message)
+        for chunk in self.message_stream.send():
+            content = chunk["message"]["content"]
+            self.messageReady.emit(content)  # 在这里发射信号
+
+            if chunk["done"]:
+                self.finished.emit()
 
 
 class MessageStream:

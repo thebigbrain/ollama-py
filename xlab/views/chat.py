@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QKeyEvent
-from xlab.chat.message import MessageStream
+from xlab.chat.message import MessageStream, MessageThread
 
 
 class MyLineEdit(QLineEdit):
@@ -61,12 +61,33 @@ class ChatFloatingWidget(QWidget):
     def sendMessage(self):
         # 获取输入框内容
         message = self.messageInput.text()
-        if message:
-            self.messageInput.setText("")
-            self.chatHistory.append("You: " + message)
-            self.stream.add_message(message=message)
-            for chunk in self.stream.send():
-                print(chunk["message"]["content"], end="", flush=True)
+        if not message:
+            return
+
+        self.messageInput.setText("")
+
+        self.chatHistory.append("You: " + message)
+
+        self.chatHistory.append("Assistant: ")
+
+        # 创建线程实例并传入消息流和消息
+        self.message_thread = MessageThread(self.stream, message)
+
+        # 将信号连接到插槽，在这里更新聊天历史
+        self.message_thread.messageReady.connect(self.updateChatHistory)
+        self.message_thread.finished.connect(self.chatStreamDone)
+
+        # 启动线程
+        self.message_thread.start()
+
+    def updateChatHistory(self, content):
+        # QThread信号发送的文本会通过这个插槽追加在聊天历史中
+        self.chatHistory.insertPlainText(content)
+
+    def chatStreamDone(self):
+        self.chatHistory.append("# 回复已完成")
+        self.message_thread.quit()
+        self.message_thread.wait()
 
     def move_to_bottom_right(self):
         # 获取屏幕尺寸
@@ -78,6 +99,12 @@ class ChatFloatingWidget(QWidget):
 
         # 移动窗口到右下角
         self.move(xpos, ypos)
+
+    def closeEvent(self, event):
+        if self.message_thread.isRunning():
+            self.message_thread.quit()
+            self.message_thread.wait()
+        super().closeEvent(event)
 
 
 if __name__ == "__main__":
