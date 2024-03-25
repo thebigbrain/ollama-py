@@ -31,6 +31,7 @@ class ChatFloatingWidget(QWidget):
         super().__init__()
         self.initUI()
         self.stream = MessageStream()
+        self.message_thread = None
 
     def initUI(self):
         # 设置窗口标题和大小
