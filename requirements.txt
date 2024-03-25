@@ -5,3 +5,4 @@ ollama
 huggingface-hub
 torch
 transformers 
+torchvision 
