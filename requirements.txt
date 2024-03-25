@@ -6,3 +6,5 @@ huggingface-hub
 torch
 transformers 
 torchvision 
+pynput
+pymongo
