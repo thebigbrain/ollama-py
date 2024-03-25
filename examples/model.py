@@ -1,6 +1,6 @@
 from torch import nn
 
-from examples.device import get_device
+from device import get_device
 
 
 # Define model
