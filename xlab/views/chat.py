@@ -101,7 +101,7 @@ class ChatFloatingWidget(QWidget):
         self.move(xpos, ypos)
 
     def closeEvent(self, event):
-        if self.message_thread.isRunning():
+        if self.message_thread and self.message_thread.isRunning():
             self.message_thread.quit()
             self.message_thread.wait()
         super().closeEvent(event)
