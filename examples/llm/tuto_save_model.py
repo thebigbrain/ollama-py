@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision.transforms import ToTensor
 
-from device import get_device
+from examples.llm.device import get_device
 
 # Download training data from open datasets.
 training_data = datasets.FashionMNIST(

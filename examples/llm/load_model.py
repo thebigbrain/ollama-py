@@ -1,7 +1,7 @@
 import torch
 
-from .device import get_device
-from .model import get_model
+from examples.llm.device import get_device
+from examples.llm.model import get_model
 from torchvision import datasets
 from torchvision.transforms import ToTensor
 

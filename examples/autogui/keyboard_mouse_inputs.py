@@ -1,10 +1,9 @@
-from pymongo import MongoClient
 from pynput import mouse, keyboard
 from datetime import datetime
+from db_operations import DBOperations
 
-client = MongoClient('mongodb://localhost:27017/')  # 连接到本地MongoDB实例
-db = client['user_input']  # 创建数据库
-collection = db['events']  # 创建集合
+db_ops = DBOperations('mongodb://localhost:27017/', 'user_input', 'events')
+
 
 # 键盘监听
 def on_key_press(key):
@@ -13,7 +12,8 @@ def on_key_press(key):
         'type': 'key_press',
         'key': str(key),
     }
-    collection.insert_one(event)
+    db_ops.insert_data(event)
+
 
 def on_key_release(key):
     event = {
@@ -21,7 +21,8 @@ def on_key_release(key):
         'type': 'key_release',
         'key': str(key),
     }
-    collection.insert_one(event)
+    db_ops.insert_data(event)
+
 
 # 鼠标监听
 def on_mouse_move(x, y):
@@ -31,7 +32,8 @@ def on_mouse_move(x, y):
         'x': x,
         'y': y,
     }
-    collection.insert_one(event)
+    db_ops.insert_data(event)
+
 
 def on_mouse_click(x, y, button, pressed):
     event = {
@@ -42,7 +44,8 @@ def on_mouse_click(x, y, button, pressed):
         'button': str(button),
         'pressed': pressed,
     }
-    collection.insert_one(event)
+    db_ops.insert_data(event)
+
 
 # 创建并开始键盘监听
 keyboard_listener = keyboard.Listener(on_press=on_key_press, on_release=on_key_release)
