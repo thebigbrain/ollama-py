@@ -7,17 +7,18 @@ from examples.autogui.generate_data import gen_data
 from examples.autogui.models import ModelLoader
 
 n_steps = 3600
+activation = 'tanh'
 
 X, n_features = gen_data(n_steps)
 
 inputs = Input(shape=(n_steps, n_features))
-encoded = LSTM(50, activation='relu')(inputs)
+encoded = LSTM(50, activation=activation)(inputs)
 
 # Repeat the encoded output n_steps times to match the decoder structure
 repeated_out = RepeatVector(n_steps)(encoded)
 
 # Decoder structure
-decoded = LSTM(n_features, return_sequences=True, activation='relu')(repeated_out)
+decoded = LSTM(n_features, return_sequences=True, activation=activation)(repeated_out)
 
 if __name__ == '__main__':
     # 尝试加载已存在的模型
@@ -26,7 +27,8 @@ if __name__ == '__main__':
     if autoencoder is None:
         # 如果不存在模型，构造一个新的autoencoder模型
         autoencoder = Model(inputs, decoded)
-        autoencoder.compile(optimizer=Adam(learning_rate=0.0001), loss='mse')
+
+    autoencoder.compile(optimizer=Adam(learning_rate=0.01), loss='mse')
 
     # 定义一个检查点（checkpoint）回调，保存在训练过程中验证集损失最小的模型
     checkpoint_cb = ModelCheckpoint(ModelLoader.get_model_path(), monitor='val_loss', save_best_only=True, mode='min')
