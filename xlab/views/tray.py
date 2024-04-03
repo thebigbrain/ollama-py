@@ -34,7 +34,7 @@ class SystemTrayIcon(QSystemTrayIcon):
             self.show_app()
 
 
-def create_tray_icon(parent: QObject):
+def create_tray_icon(parent: QObject = None):
     # 创建一个图标对象
     icon = QIcon(ICON_PATH)  # 请确保 icon.png 文件在您的脚本目录中
 

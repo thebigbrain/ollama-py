@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QLabel, QWidget, QApplication, QMenu
 from PyQt6.QtGui import QPixmap, QBitmap, QPainter
 from PyQt6.QtCore import Qt, QPoint
 from xlab.core.resources import get_resource
-from xlab.views.chat_input import ChatInputBox
+from xlab.views.chat import MyLineEdit
 
 
 class FloatingIcon(QWidget):
@@ -60,7 +60,7 @@ class FloatingIcon(QWidget):
 
     def showChatInput(self):
         # 显示聊天输入框
-        self.chat_input_box = ChatInputBox(self)
+        self.chat_input_box = MyLineEdit(self)
         self.chat_input_box.show()
 
     # 实现图标的点击和拖动功能
