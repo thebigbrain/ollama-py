@@ -4,7 +4,7 @@ PyQt6~=6.6.1
 ollama~=0.1.8
 huggingface-hub
 torch~=2.2.2
-transformers 
+transformers~=4.39.2
 torchvision~=0.17.2
 pynput~=1.7.6
 pymongo~=4.6.3
@@ -19,3 +19,5 @@ pandas~=2.2.1
 keras~=3.1.1
 scikit-learn~=1.4.1.post1
 tensorflow
+PyGetWindow~=0.0.9
+pywinauto~=0.6.8
