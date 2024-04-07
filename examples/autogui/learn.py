@@ -1,43 +1,47 @@
-from keras.models import Model
-from keras.layers import Input, LSTM, RepeatVector
-from keras.optimizers import Adam
-from keras.src.callbacks import ModelCheckpoint, ReduceLROnPlateau
+from torch import nn
+import torch
 
+from examples.autogui.dataset import AutoGUIDataset
 from examples.autogui.generate_data import gen_data
-from examples.autogui.models import ModelLoader
+from examples.autogui.models import ModelLoader, MultiTaskLSTM
+from torch.utils.data import DataLoader
 
-n_steps = 3600
-activation = 'tanh'
+train_dataset, n_features = gen_data()
 
-X, n_features = gen_data(n_steps)
+batch_size = 64  # 一个批次中的样本数量
+train_data = AutoGUIDataset(train_dataset)  # train_dataset是实际的训练数据
+train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 
-inputs = Input(shape=(n_steps, n_features))
-encoded = LSTM(50, activation=activation)(inputs)
+input_size = n_features
+hidden_size = 64
+num_layers = 2
+num_classes = 4
+num_keys = 87
 
-# Repeat the encoded output n_steps times to match the decoder structure
-repeated_out = RepeatVector(n_steps)(encoded)
+# 我们假设有 5 个训练周期
+num_epochs = 5
 
-# Decoder structure
-decoded = LSTM(n_features, return_sequences=True, activation=activation)(repeated_out)
+# 初始化模型、优化器和损失函数
+model = MultiTaskLSTM(input_size, hidden_size, num_layers, num_keys)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+criterion_position = nn.MSELoss()
+criterion_type = nn.CrossEntropyLoss()
 
-if __name__ == '__main__':
-    # 尝试加载已存在的模型
-    autoencoder = ModelLoader.load_model()
+for epoch in range(num_epochs):
+    for i, (actions, positions, types) in enumerate(train_loader):
+        outputs_position, outputs_type = model(actions)
 
-    if autoencoder is None:
-        # 如果不存在模型，构造一个新的autoencoder模型
-        autoencoder = Model(inputs, decoded)
+        loss_position = criterion_position(outputs_position, positions)
+        loss_type = criterion_type(outputs_type, types)
 
-    autoencoder.compile(optimizer=Adam(learning_rate=0.01), loss='mse')
+        loss = loss_position + loss_type
 
-    # 定义一个检查点（checkpoint）回调，保存在训练过程中验证集损失最小的模型
-    checkpoint_cb = ModelCheckpoint(ModelLoader.get_model_path(), monitor='val_loss', save_best_only=True, mode='min')
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
-    # Training.
-    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
-                                  patience=5, min_lr=0.00001)
-    autoencoder.fit(X, X, epochs=200, validation_split=0.2, callbacks=[checkpoint_cb, reduce_lr])
-    print(autoencoder.summary())
+    if (epoch + 1) % 100 == 0:
+        print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item()}")
 
-    # Save the improved model
-    ModelLoader.save_model(autoencoder)
+
+ModelLoader.save(model, "keymouse-lstm")
