@@ -8,7 +8,7 @@ import torch.nn as nn
 
 
 class MultiTaskLSTM(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers, num_keys):
+    def __init__(self, input_size, hidden_size, num_layers):
         super(MultiTaskLSTM, self).__init__()
 
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
@@ -18,7 +18,7 @@ class MultiTaskLSTM(nn.Module):
         self.fc_type = nn.Linear(hidden_size, 5)  # 有5种可能的动作，包括'key_press'
 
         # 预测键盘输入
-        self.fc_key = nn.Linear(hidden_size, num_keys)  # num_keys是可能的输入字符数量
+        self.fc_key = nn.Linear(hidden_size, 87)  # num_keys是可能的输入字符数量
 
     def forward(self, x):
         out, _ = self.lstm(x)

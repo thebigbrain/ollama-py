@@ -15,13 +15,16 @@ train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 input_size = n_features
 hidden_size = 64
 num_layers = 2
-num_keys = 87
 
 # 我们假设有 5 个训练周期
 num_epochs = 5
 
 # 初始化模型、优化器和损失函数
-model = MultiTaskLSTM(input_size, hidden_size, num_layers, num_keys)
+model = MultiTaskLSTM(
+    input_size,
+    hidden_size,
+    num_layers,
+)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 criterion_position = nn.MSELoss()
 criterion_type = nn.CrossEntropyLoss()
