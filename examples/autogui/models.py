@@ -1,32 +1,32 @@
 from os.path import isfile
 
 import torch
+import torch.nn as nn
 
 from xlab.core.resources import get_model_path
 
-import torch.nn as nn
 
+class KeyMouseLSTM(nn.Module):
+    def __init__(self, input_size=1, hidden_layer_size=100, batch_size=1):
+        super().__init__()
+        self.hidden_cell = None
+        self.batch_size = batch_size
+        self.hidden_layer_size = hidden_layer_size
 
-class MultiTaskLSTM(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers):
-        super(MultiTaskLSTM, self).__init__()
+        self.lstm = nn.LSTM(input_size, hidden_layer_size)
 
-        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
+        self.linear = nn.Linear(hidden_layer_size, input_size)
 
-        # 预测鼠标的位置和动作类型
-        self.fc_position = nn.Linear(hidden_size, 2)
-        self.fc_type = nn.Linear(hidden_size, 5)  # 有5种可能的动作，包括'key_press'
+        self.init_hidden()
 
-        # 预测键盘输入
-        self.fc_key = nn.Linear(hidden_size, 120)  # num_keys是可能的输入字符数量
+    def init_hidden(self):
+        self.hidden_cell = (torch.zeros(1, self.batch_size, self.hidden_layer_size),
+                            torch.zeros(1, self.batch_size, self.hidden_layer_size))
 
-    def forward(self, x):
-        out, _ = self.lstm(x)
-        out = out[:, -1, :]
-        out_position = self.fc_position(out)
-        out_type = self.fc_type(out)
-        out_key = self.fc_key(out)
-        return out_position, out_type, out_key
+    def forward(self, input_seq):
+        lstm_out, self.hidden_cell = self.lstm(input_seq.view(len(input_seq), self.batch_size, -1), self.hidden_cell)
+        predictions = self.linear(lstm_out.view(-1, self.hidden_layer_size))
+        return predictions[-1]
 
 
 class ModelLoader:

@@ -1,5 +1,6 @@
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 import pandas as pd
+import numpy as np
 
 from examples.autogui.db import db
 
@@ -8,8 +9,13 @@ def gen_data(n_steps=3600):
     df = db.read_data()
 
     # 将 timestamp 转化为seconds
-    start_time = df["timestamp"].min()
-    df["timestamp"] = (df["timestamp"] - start_time).dt.total_seconds()
+    # 计算时间戳的均值和标准差
+    timestamps = df["timestamp"]
+    mean_timestamp = timestamps.mean()
+    std_timestamp = timestamps.std()
+
+    # 标准化时间戳
+    normalized_timestamps = (timestamps - mean_timestamp) / std_timestamp
 
     df.fillna(
         {"key": "", "x": -1, "y": -1, "button": "", "pressed": False}, inplace=True
@@ -30,15 +36,25 @@ def gen_data(n_steps=3600):
 
     # 合并 DataFrame
     processed_df = pd.concat(
-        [df["timestamp"], df[["x", "y", "pressed"]], onehot_df], axis=1
+        [normalized_timestamps, df[["x", "y", "pressed"]], onehot_df], axis=1
     )
+
+    # print(processed_df.shape)
+    # print(normalized_timestamps)
+    # print(df[["x", "y", "pressed"]])
+    # print(onehot_df)
 
     # 将 processed_df 转化为 numpy array，并进行样本分割
     X = processed_df.to_numpy()
     n_samples = int(len(X) / n_steps)
 
-    X = X[: n_samples * n_steps].reshape(n_samples, n_steps, -1)
+    X = X[:n_samples * n_steps].reshape(n_samples, n_steps, -1)
 
     _, _, n_features = X.shape
 
     return X, n_features
+
+
+if __name__ == "__main__":
+    X, n_features = gen_data()
+    print(X)

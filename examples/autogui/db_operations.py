@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from pymongo import MongoClient
 import pandas as pd
 
@@ -15,5 +17,12 @@ class DBOperations:
 
     # 读取所有数据
     def read_data(self):
-        data = pd.DataFrame(list(self.collection.find()))
+        # 计算当前时间和12小时前的时间
+        current_time = datetime.now()
+        twelve_hours_ago = current_time - timedelta(hours=24)
+
+        # 构建查询，只返回最近12小时的数据
+        query = {"timestamp": {"$gte": twelve_hours_ago}}
+
+        data = pd.DataFrame(list(self.collection.find(query)))
         return data
