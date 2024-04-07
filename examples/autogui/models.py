@@ -18,7 +18,7 @@ class MultiTaskLSTM(nn.Module):
         self.fc_type = nn.Linear(hidden_size, 5)  # 有5种可能的动作，包括'key_press'
 
         # 预测键盘输入
-        self.fc_key = nn.Linear(hidden_size, 150)  # num_keys是可能的输入字符数量
+        self.fc_key = nn.Linear(hidden_size, 120)  # num_keys是可能的输入字符数量
 
     def forward(self, x):
         out, _ = self.lstm(x)
