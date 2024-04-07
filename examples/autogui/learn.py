@@ -15,7 +15,6 @@ train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 input_size = n_features
 hidden_size = 64
 num_layers = 2
-num_classes = 4
 num_keys = 87
 
 # 我们假设有 5 个训练周期
@@ -27,8 +26,12 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 criterion_position = nn.MSELoss()
 criterion_type = nn.CrossEntropyLoss()
 
+
 for epoch in range(num_epochs):
-    for i, (actions, positions, types) in enumerate(train_loader):
+    for i, (actions, positions, types, var4, var5, var6, var7, var8) in enumerate(
+        train_loader
+    ):
+        print(actions, positions, types, var4, var5, var6, var7, var8)
         outputs_position, outputs_type = model(actions)
 
         loss_position = criterion_position(outputs_position, positions)
