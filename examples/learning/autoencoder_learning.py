@@ -43,8 +43,8 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
 
-    if (epoch + 1) % 100 == 0:
-        print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item()}")
+        if (epoch + 1) % 100 == 0:
+            print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item()}")
 
 
 ModelLoader.save(model, "keymouse-lstm")
