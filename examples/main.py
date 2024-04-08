@@ -2,27 +2,13 @@ import torch
 from examples.autogui.generate_data import gen_data
 from examples.autogui.models import KeyMouseLSTM, ModelLoader
 
-"""
-event = {
-        'timestamp': datetime.now(),
-        'type': 'mouse_scroll',
-        'x': x,
-        'y': y,
-        'dx': dx,
-        'dy': dy,
-        'key': str(key)
-    }
-"""
-
-batch_size = 1
-X, _ = gen_data(batch_size)
+X, _ = gen_data()
 
 if __name__ == "__main__":
     model: KeyMouseLSTM = ModelLoader.load("keymouse-lstm")
-    print(X)
 
     # 提供待预测的数据
-    input_data = torch.tensor(X)
+    input_data = torch.tensor(X[: int(len(X) / model.batch_size) * model.batch_size])
 
     # 将模型设置为评估模式
     model.eval()
