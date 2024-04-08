@@ -53,3 +53,4 @@ class ModelLoader:
         dir_path = os.path.dirname(model_path)
         os.makedirs(dir_path, exist_ok=True)
         torch.save(model, model_path)
+        print(f"{name} model saved at {model_path}")
