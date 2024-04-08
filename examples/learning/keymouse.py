@@ -15,7 +15,7 @@ print("number of features:", n_features)
 if __name__ == "__main__":
     model = ModelLoader.load(model_name)
     if model is None:
-        print("first training: create model", n_features)
+        print(f"first training, create model {model_name} with features {n_features}")
         model = KeyMouseLSTM(input_size=n_features, batch_size=batch_size)
 
     loss_function = nn.MSELoss()  # 均方误差作为损失函数
