@@ -1,3 +1,4 @@
+import os
 from os.path import isfile
 
 import torch
@@ -20,11 +21,15 @@ class KeyMouseLSTM(nn.Module):
         self.init_hidden()
 
     def init_hidden(self):
-        self.hidden_cell = (torch.zeros(1, self.batch_size, self.hidden_layer_size),
-                            torch.zeros(1, self.batch_size, self.hidden_layer_size))
+        self.hidden_cell = (
+            torch.zeros(1, self.batch_size, self.hidden_layer_size),
+            torch.zeros(1, self.batch_size, self.hidden_layer_size),
+        )
 
     def forward(self, input_seq):
-        lstm_out, self.hidden_cell = self.lstm(input_seq.view(len(input_seq), self.batch_size, -1), self.hidden_cell)
+        lstm_out, self.hidden_cell = self.lstm(
+            input_seq.view(len(input_seq), self.batch_size, -1), self.hidden_cell
+        )
         predictions = self.linear(lstm_out.view(-1, self.hidden_layer_size))
         return predictions[-1]
 
@@ -43,4 +48,7 @@ class ModelLoader:
     @staticmethod
     def save(model, name):
         # 保存模型到指定路径
-        torch.save(model, get_model_path(name))
+        model_path = get_model_path(name)
+        dir_path = os.path.dirname(model_path)
+        os.makedirs(dir_path, exist_ok=True)
+        torch.save(model, model_path)

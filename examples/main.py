@@ -14,10 +14,11 @@ event = {
     }
 """
 
-X = gen_data()
+X, _ = gen_data()
 
 if __name__ == "__main__":
     model = ModelLoader.load("keymouse-lstm")
+    print(X)
 
     # 提供待预测的数据
     input_data = torch.tensor(X)
