@@ -39,5 +39,4 @@ if __name__ == "__main__":
     # 将预测结果转换回CPU（如果在GPU上训练的话）并转换为numpy格式（如果需要的话）
     predictions = predictions.cpu().numpy()
 
-    model = ModelLoader.load("keymouse-lstm")
-    print("out", model.predict(X))
+    print("out", predictions)
