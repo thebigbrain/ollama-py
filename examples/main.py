@@ -1,6 +1,6 @@
 import torch
 from examples.autogui.generate_data import gen_data
-from examples.autogui.models import ModelLoader
+from examples.autogui.models import KeyMouseLSTM, ModelLoader
 
 """
 event = {
@@ -18,7 +18,7 @@ batch_size = 1
 X, _ = gen_data(batch_size)
 
 if __name__ == "__main__":
-    model = ModelLoader.load("keymouse-lstm")
+    model: KeyMouseLSTM = ModelLoader.load("keymouse-lstm")
     print(X)
 
     # 提供待预测的数据
