@@ -36,8 +36,7 @@ if __name__ == "__main__":
             single_loss.backward()
             optimizer.step()
 
-        if i % 25 == 1:
-            print(f"epoch: {i:3} loss: {single_loss.item():10.8f}")
+        print(f"epoch: {i:3} loss: {single_loss.item():10.8f}")
 
     print(f"epoch: {i:3} loss: {single_loss.item():10.10f}")
 
