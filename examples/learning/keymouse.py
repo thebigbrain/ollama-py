@@ -5,7 +5,7 @@ import numpy as np
 from examples.autogui.generate_data import gen_data
 from examples.autogui.models import ModelLoader, KeyMouseLSTM
 
-batch_size = 64
+batch_size = 1
 train_dataset, n_features = gen_data(batch_size)
 
 print("number of features: ", n_features)

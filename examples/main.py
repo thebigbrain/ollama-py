@@ -14,7 +14,8 @@ event = {
     }
 """
 
-X, _ = gen_data()
+batch_size = 1
+X, _ = gen_data(batch_size)
 
 if __name__ == "__main__":
     model = ModelLoader.load("keymouse-lstm")
