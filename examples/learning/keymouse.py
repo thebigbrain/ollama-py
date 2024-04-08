@@ -1,6 +1,5 @@
 from torch import nn
 import torch
-import numpy as np
 
 from examples.autogui.generate_data import gen_data
 from examples.autogui.models import ModelLoader, KeyMouseLSTM
@@ -27,7 +26,7 @@ if __name__ == "__main__":
             optimizer.zero_grad()
             model.init_hidden()  # 加入这一行重置隐藏状态
 
-            input_seq = torch.tensor(np.array([seq]))
+            input_seq = torch.tensor([seq], dtype=torch.float32)
 
             y_predict = model(input_seq)
 
