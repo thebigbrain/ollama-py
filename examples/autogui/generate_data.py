@@ -1,6 +1,5 @@
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 import pandas as pd
-import numpy as np
 
 from examples.autogui.db import db
 

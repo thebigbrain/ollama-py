@@ -27,7 +27,7 @@ if __name__ == "__main__":
             optimizer.zero_grad()
             model.init_hidden()  # 加入这一行重置隐藏状态
 
-            input_seq = torch.Tensor(np.array([seq]))
+            input_seq = torch.tensor(np.array([seq]))
 
             y_predict = model(input_seq)
 
