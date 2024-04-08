@@ -4,7 +4,7 @@ import pandas as pd
 from examples.autogui.db import db
 
 
-def gen_data(n_steps=1):
+def gen_data():
     df = db.read_data()
 
     # 将 timestamp 转化为seconds
@@ -45,11 +45,8 @@ def gen_data(n_steps=1):
 
     # 将 processed_df 转化为 numpy array，并进行样本分割
     X = processed_df.to_numpy()
-    n_samples = int(len(X) / n_steps)
 
-    X = X[: n_samples * n_steps].reshape(n_samples, n_steps, -1)
-
-    _, _, n_features = X.shape
+    _, n_features = X.shape
 
     return X, n_features
 

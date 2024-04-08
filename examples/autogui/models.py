@@ -28,7 +28,7 @@ class KeyMouseLSTM(nn.Module):
 
     def forward(self, input_seq):
         lstm_out, self.hidden_cell = self.lstm(
-            input_seq.view(len(input_seq), self.batch_size, self.lstm.input_size),
+            input_seq.view(-1, self.batch_size, self.lstm.input_size),
             self.hidden_cell,
         )
         predictions = self.linear(lstm_out.view(-1, self.hidden_layer_size))
