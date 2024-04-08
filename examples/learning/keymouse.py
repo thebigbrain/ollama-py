@@ -1,5 +1,6 @@
 from torch import nn
 import torch
+import numpy as np
 
 from examples.autogui.generate_data import gen_data
 from examples.autogui.models import ModelLoader, KeyMouseLSTM
@@ -14,7 +15,7 @@ print("number of features:", n_features)
 if __name__ == "__main__":
     model = ModelLoader.load(model_name)
     if model is None:
-        print("first training: create model")
+        print("first training: create model", n_features)
         model = KeyMouseLSTM(input_size=n_features, batch_size=batch_size)
 
     loss_function = nn.MSELoss()  # 均方误差作为损失函数
@@ -27,7 +28,7 @@ if __name__ == "__main__":
             optimizer.zero_grad()
             model.init_hidden()  # 加入这一行重置隐藏状态
 
-            input_seq = torch.tensor([seq], dtype=torch.float32)
+            input_seq = torch.tensor(np.array([seq]), dtype=torch.float32)
 
             y_predict = model(input_seq)
 
