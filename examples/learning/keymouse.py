@@ -41,7 +41,7 @@ if __name__ == "__main__":
             single_loss.backward()
             optimizer.step()
 
-        print(f"epoch: {i:3}/{epochs}, loss: {single_loss.item():10.10f}")
+        print(f"epoch: {i+1:3}/{epochs}, loss: {single_loss.item():10.10f}")
         ModelLoader.save(model, model_name)
 
     ModelLoader.save(model, model_name)
