@@ -21,3 +21,5 @@ scikit-learn~=1.4.1.post1
 tensorflow
 PyGetWindow~=0.0.9
 pywinauto~=0.6.8
+cefpython3~=66.1
+pywebview~=5.0.5

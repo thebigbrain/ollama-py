@@ -1,4 +1,6 @@
 import torch
+import numpy as np
+
 from examples.autogui.generate_data import gen_data
 from examples.autogui.models import KeyMouseLSTM, ModelLoader
 
@@ -10,7 +12,7 @@ if __name__ == "__main__":
 
     j = int(len(X) / model.batch_size) * model.batch_size
     # 提供待预测的数据
-    input_data = torch.tensor(X[:j], dtype=torch.float32)
+    input_data = torch.tensor(np.array([X[:j]]), dtype=torch.float32)
 
     # 将模型设置为评估模式
     model.eval()
@@ -25,9 +27,9 @@ if __name__ == "__main__":
         predictions = model(input_data)
 
     # 将预测结果转换回CPU（如果在GPU上训练的话）并转换为numpy格式（如果需要的话）
-    predictions = predictions.cpu().numpy()
+    predictions = predictions.cpu()
 
     loss_function = torch.nn.MSELoss()  # 均方误差作为损失函数
 
-    loss = loss_function(predictions, X[j+1])
+    loss = loss_function(predictions, torch.tensor(X[j + 1], dtype=torch.float))
     print(f"loss {loss.item():10.10f}")
