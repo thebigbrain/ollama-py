@@ -1,4 +1,4 @@
-from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
+from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
 import torch
 
@@ -6,6 +6,7 @@ from examples.autogui.db import db
 import numpy as np
 
 from examples.autogui.keys import keys_mapping
+from xlab.preprocessing.screen import get_screen_scaler
 
 
 def gen_data():
@@ -20,9 +21,7 @@ def gen_data():
     # 标准化时间戳
     normalized_timestamps = (timestamps - mean_timestamp) / std_timestamp
 
-    df.fillna(
-        {"key": "", "x": -1, "y": -1, "button": "", "pressed": False}, inplace=True
-    )
+    df.fillna({"key": "", "x": 0, "y": 0, "button": "", "pressed": False}, inplace=True)
 
     # 对 type 和 button 字段进行 one-hot 编码
     encoder = OneHotEncoder()
@@ -47,9 +46,8 @@ def gen_data():
     key_data = embedding(torch.tensor(df["key"])).detach().numpy()
     key_df = pd.DataFrame(key_data)
 
-    # 将 x, y 坐标归一化
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    df[["x", "y"]] = scaler.fit_transform(df[["x", "y"]])
+    scaler = get_screen_scaler()
+    df[["x", "y"]] = scaler.transform(df[["x", "y"]])
 
     # 将 pressed 字段转化为 int
     df["pressed"] = df["pressed"].astype(int)
