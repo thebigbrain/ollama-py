@@ -8,18 +8,26 @@ from xlab.core.resources import get_screeshot_path
 
 db_ops = DBOperations("mongodb://localhost:27017/", "user_input", "events")
 
+last_screen_saved_at = 0
 
-def save_screeshot():
+
+def save_screeshot(range=0):
+    now = datetime.now()
+    if now - range < last_screen_saved_at:
+        return None
+
     screenshot = get_screeshot_path(
         "_".join(
             [
-                datetime.now().strftime("%Y-%m-%d").replace("-", "_"),
+                now.strftime("%Y-%m-%d").replace("-", "_"),
                 str(time.time()).replace(".", "_"),
             ],
         )
     )
 
     pyautogui.screenshot(screenshot)
+
+    last_screen_saved_at = now
     return screenshot
 
 
@@ -83,7 +91,8 @@ def on_scroll(x, y, dx, dy):
             "y": y,
             "dx": dx,
             "dy": dy,
-        }
+        },
+        save_screeshot(3),
     )
 
 
