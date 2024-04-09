@@ -23,14 +23,10 @@ def save_screeshot():
     return screenshot
 
 
-def save_event(event):
+def save_event(event, screenshot=None):
     timestamp = datetime.now()
 
-    data = dict(
-        {
-            "timestamp": timestamp,
-        }
-    )
+    data = dict({"timestamp": timestamp, "screenshot": screenshot})
     data.update(event)
     db_ops.insert_data(data)
 
