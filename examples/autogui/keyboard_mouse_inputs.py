@@ -69,7 +69,8 @@ def on_mouse_click(x, y, button, pressed):
             "y": y,
             "button": str(button),
             "pressed": pressed,
-        }
+        },
+        save_screeshot(),
     )
 
 
