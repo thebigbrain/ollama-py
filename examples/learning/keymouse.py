@@ -41,9 +41,7 @@ if __name__ == "__main__":
             single_loss.backward()
             optimizer.step()
 
-        print(f"epoch: {i:3} loss: {single_loss.item():10.10f}")
-
-        if i > 0 and i % 33 == 0:
-            ModelLoader.save(model, model_name)
+        print(f"epoch: {i:3}/{epochs}, loss: {single_loss.item():10.10f}")
+        ModelLoader.save(model, model_name)
 
     ModelLoader.save(model, model_name)

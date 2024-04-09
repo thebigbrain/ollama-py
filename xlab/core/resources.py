@@ -22,7 +22,7 @@ def get_resource(name: str) -> str:
 
 
 def get_model_path(name: str) -> str:
-    return resource_path(os.path.join("tmp", f"{name}.pth"))
+    return resource_path(os.path.join("data", "models", f"{name}.pth"))
 
 
 # unittest 用例
