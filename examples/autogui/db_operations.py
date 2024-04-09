@@ -23,6 +23,6 @@ class DBOperations:
         #
         # # 构建查询，只返回最近12小时的数据
         # query = {"timestamp": {"$gte": twelve_hours_ago}}
-
-        data = pd.DataFrame(list(self.collection.find()))
+        d = list(self.collection.find())
+        data = pd.DataFrame(d)
         return data
