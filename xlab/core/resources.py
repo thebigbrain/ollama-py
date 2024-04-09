@@ -25,6 +25,12 @@ def get_model_path(name: str) -> str:
     return resource_path(os.path.join("data", "models", f"{name}.pth"))
 
 
+def get_screeshot_path(name: str, ext="png") -> str:
+    p = resource_path(os.path.join("data", "screenshots", f"{name}.{ext}"))
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    return p
+
+
 # unittest 用例
 
 

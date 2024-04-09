@@ -1,17 +1,34 @@
+import time
+import pyautogui
 from pynput import mouse, keyboard
 from datetime import datetime
 from db_operations import DBOperations
+from xlab.core.resources import get_screeshot_path
 
-# from xlab.win.active import get_active_win_info
 
 db_ops = DBOperations("mongodb://localhost:27017/", "user_input", "events")
 
 
+def save_screeshot():
+    screenshot = get_screeshot_path(
+        "_".join(
+            [
+                datetime.now().strftime("%Y-%m-%d").replace("-", "_"),
+                str(time.time()).replace(".", "_"),
+            ],
+        )
+    )
+
+    pyautogui.screenshot(screenshot)
+    return screenshot
+
+
 def save_event(event):
+    timestamp = datetime.now()
+
     data = dict(
         {
-            "timestamp": datetime.now(),
-            # 'active_win': get_active_win_info(),
+            "timestamp": timestamp,
         }
     )
     data.update(event)
