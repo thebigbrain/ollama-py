@@ -6,7 +6,7 @@ import threading
 
 PORT = 2080
 TARGET_HOST = "127.0.0.1"
-TARGET_PORT = "7890"
+TARGET_PORT = 7890
 
 
 def signal_handler(signum, frame):
@@ -14,28 +14,43 @@ def signal_handler(signum, frame):
     sys.exit()
 
 
-def handle_client(client_socket):
-    # 接收来自客户端的请求
-    request = client_socket.recv(1024)
+def receive_data(s):
+    r = b""
+    while True:
+        data = s.recv(1024)
+        if not data:
+            break
+        print(f"receive message<{len(data)}>")
+        r += data
+        if len(data) < 1024:
+            break
+    return r
 
+
+def handle_client(client_socket):
+    print("waiting for request")
+
+    # 接收来自客户端的请求
+    request = receive_data(client_socket)
+    print(f"Got Request<{len(request)}>: {request}")
     # 解析请求
     # ...
 
     # 将请求转发给目标服务器
     target_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     target_socket.connect((TARGET_HOST, TARGET_PORT))
+    print('connect target proxy success')
     target_socket.sendall(request)
+    print('send to target proxy done')
 
     # 接收目标服务器的响应
-    response = b""
-    while True:
-        data = target_socket.recv(1024)
-        if not data:
-            break
-        response += data
+    response = receive_data(target_socket)
+    print(f"Got Response<{len(response)}>: {response}")
 
     # 将响应发送给客户端
     client_socket.sendall(response)
+
+    print(f"send response success")
 
     # 关闭连接
     client_socket.close()
@@ -47,8 +62,8 @@ def start_proxy(server_socket, event):
         client_socket, client_address = server_socket.accept()
         try:
             handle_client(client_socket)
-        except Exception:
-            print("An exception occurred in the proxy thread")
+        except Exception as e:
+            print("An exception occurred in the proxy thread", e)
             client_socket.close()
             server_socket.close()
             event.set()
@@ -87,6 +102,6 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except Exception:
-        print("An exception occurred in the main thread")
+    except Exception as e:
+        print("An exception occurred in the main thread", e)
         sys.exit()
