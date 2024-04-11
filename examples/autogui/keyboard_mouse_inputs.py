@@ -27,7 +27,6 @@ def save_screeshot(range=1):
     )
 
     pyautogui.screenshot(screenshot)
-    print("save screenshot")
 
     last_screen_saved_at = now
     return screenshot
