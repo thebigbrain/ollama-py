@@ -23,3 +23,5 @@ PyGetWindow~=0.0.9
 pywinauto~=0.6.8
 cefpython3~=66.1
 pywebview~=5.0.5
+tensorflow >= 1.11.0   # CPU Version of TensorFlow.
+# tensorflow-gpu  >= 1.11.0  # GPU version of TensorFlow.
