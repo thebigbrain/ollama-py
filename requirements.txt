@@ -25,3 +25,4 @@ cefpython3~=66.1
 pywebview~=5.0.5
 tensorflow >= 1.11.0   # CPU Version of TensorFlow.
 # tensorflow-gpu  >= 1.11.0  # GPU version of TensorFlow.
+pyscreenshot~=3.1

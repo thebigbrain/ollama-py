@@ -11,7 +11,8 @@ db_ops = DBOperations("mongodb://localhost:27017/", "user_input", "events")
 last_screen_saved_at = 0
 
 
-def save_screeshot(range=0):
+def save_screeshot(range=1):
+    global last_screen_saved_at
     now = time.time()
     if now - range < last_screen_saved_at:
         return None
@@ -26,6 +27,7 @@ def save_screeshot(range=0):
     )
 
     pyautogui.screenshot(screenshot)
+    print("save screenshot")
 
     last_screen_saved_at = now
     return screenshot
@@ -33,9 +35,7 @@ def save_screeshot(range=0):
 
 def save_event(event, screenshot=None):
     timestamp = datetime.now()
-
-    data = dict({"timestamp": timestamp, "screenshot": screenshot})
-    data.update(event)
+    data = dict({"timestamp": timestamp, "screenshot": screenshot, "event": event})
     db_ops.insert_data(data)
 
 
@@ -92,7 +92,7 @@ def on_scroll(x, y, dx, dy):
             "dx": dx,
             "dy": dy,
         },
-        save_screeshot(3),
+        save_screeshot(),
     )
 
 
@@ -103,12 +103,13 @@ if __name__ == "__main__":
     keyboard_listener = keyboard.Listener(
         on_press=on_key_press, on_release=on_key_release
     )
-    keyboard_listener.start()
 
     # 创建并开始鼠标监听
     mouse_listener = mouse.Listener(
         on_move=on_mouse_move, on_click=on_mouse_click, on_scroll=on_scroll
     )
+
+    keyboard_listener.start()
     mouse_listener.start()
 
     keyboard_listener.join()
