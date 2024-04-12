@@ -1,11 +1,18 @@
+from xlab.generative_agent.action import ActionPolicy
 from xlab.generative_agent.environment import Environment
-from xlab.generative_agent.memory_stream import Experience
+from xlab.generative_agent.memory_stream import Experience, MemoryStreamModule
 
 
 class Agent:
-    def __init__(self, perception_module, memory_stream_module):
+    def __init__(
+        self,
+        perception_module,
+        memory_stream_module: MemoryStreamModule,
+        action_policy: ActionPolicy,
+    ):
         self.perception_module = perception_module
         self.memory_stream_module = memory_stream_module
+        self.action_policy = action_policy
 
     def perceive(self):
         # Perceive the current state of the environment
@@ -15,20 +22,13 @@ class Agent:
     def take_action(self, memories, state):
         # Select an action based on memories and current state
         # This can be implemented using various decision-making algorithms, such as Q-learning or policy gradient methods
-        action = ...
-        return action
+        return self.action_policy.take_action(memories, state)
 
     def form_long_term_plan(self):
-        # Analyze memories and form a long-term plan
-        # This is a placeholder for a more complex implementation
-        long_term_plan = None
-        return long_term_plan
+        return self.memory_stream_module.form_long_term_plan()
 
     def reflect(self):
-        # Reflect on past experiences and gain insights
-        # This is a placeholder for a more complex implementation
-        reflections = None
-        return reflections
+        return self.memory_stream_module.reflect()
 
     def learn(self, environment: Environment):
         num_episodes = 1000  # Total training episodes
