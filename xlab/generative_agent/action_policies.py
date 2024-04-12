@@ -1,6 +1,6 @@
 import numpy as np
 from xlab.generative_agent.action import Action, ActionPolicy
-from .state import EnvState
+from xlab.generative_agent.state import EnvState
 
 
 class QLearningPolicy(ActionPolicy):
