@@ -46,42 +46,30 @@ def on_scroll(x, y, dx, dy):
 
 def get_screeshot():
     img = pyautogui.screenshot()  # 降低截屏分辨率
-    # image = image.compress()  # 压缩图像
-    return img, np.array(img).astype(np.uint8)
-
-
-# 定义截屏函数
-def take_screenshot():
-    event_queue.put({"type": "screenshot", "image": get_screeshot()})
-
-
-prev_image = None
+    _, buffer = cv2.imencode(".png", img, [cv2.IMWRITE_PNG_COMPRESSION, 6])
+    return img, buffer
 
 
 # 定义屏幕变化检测函数
 def detect_screen_change():
-    global prev_image
+    _, _prev = get_screeshot()
 
-    _, curr_image = get_screeshot()
-    if prev_image is None:
-        take_screenshot()
-        prev_image = curr_image
+    while True:
+        time.sleep(1)
 
-    # 计算两张图像之间的差异
-    diff = cv2.absdiff(prev_image, curr_image)
-    change_rate = np.sum(diff) / (diff.size * 255)
+        img, _cur = get_screeshot()
 
-    # 变化率大于阈值则触发截屏
-    if change_rate > 0.1:
-        print("检测到屏幕变化", change_rate)
-        take_screenshot()
+        # 计算两张图像之间的差异
+        diff = cv2.absdiff(_prev, _cur)
+        change_rate = np.sum(diff) / (diff.size * 255)
 
-    # 更新上一帧图像
-    prev_image = curr_image
+        # 变化率大于阈值则触发截屏
+        if change_rate > 0.1:
+            print("检测到屏幕变化", change_rate)
+            event_queue.put({"type": "screenshot", "image": img})
 
-    time.sleep(1)
-
-    detect_screen_change()
+        # 更新上一帧图像
+        _prev = _cur
 
 
 if __name__ == "__main__":

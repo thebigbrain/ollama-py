@@ -3,7 +3,7 @@ import signal
 import sys
 import time
 
-from xlab.core.thread_group import ThreadGroup
+from xlab.core.thread_group import DaemonThread, ThreadGroup
 
 # 定义队列
 event_queue = queue.Queue()
@@ -26,6 +26,7 @@ def train_model():
     while True:
         # 从队列中获取数据
         data = event_queue.get()
+        print(data)
 
         # 使用模型训练框架来训练模型
         # ...
@@ -36,7 +37,7 @@ def train_model():
 
 def signal_handler(sig, frame):
     # 退出应用
-    print("退出主线程", sig, frame)
+    print("退出主线程", frame)
     ThreadGroup.stop()
     sys.exit()
 
@@ -45,8 +46,8 @@ if __name__ == "__main__":
     # 创建数据收集线程和模型训练线程
     signal.signal(signal.SIGINT, signal_handler)
 
-    ThreadGroup.add_daemon(collect_data)
-    ThreadGroup.add_daemon(train_model)
+    ThreadGroup.add_daemon(DaemonThread(target=collect_data))
+    ThreadGroup.add_daemon(DaemonThread(target=train_model))
 
     ThreadGroup.start()
 
