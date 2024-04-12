@@ -1,5 +1,5 @@
-from xlab.memorystream.environment import Environment
-from xlab.memorystream.memory_stream import Experience
+from xlab.generative_agent.environment import Environment
+from xlab.generative_agent.memory_stream import Experience
 
 
 class Agent:

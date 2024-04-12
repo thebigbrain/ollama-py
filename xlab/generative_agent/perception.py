@@ -1,4 +1,4 @@
-from xlab.memorystream.environment import Environment
+from xlab.generative_agent.environment import Environment
 
 
 class PerceptionModule:

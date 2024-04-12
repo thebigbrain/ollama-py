@@ -1,4 +1,4 @@
-from xlab.memorystream.environment import EnvState
+from xlab.generative_agent.environment import EnvState
 
 
 class Experience:

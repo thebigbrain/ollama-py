@@ -1,7 +1,7 @@
 import numpy as np
 
-from xlab.memorystream.environment import EnvState
-from xlab.memorystream.experience import Experience
+from xlab.generative_agent.environment import EnvState
+from xlab.generative_agent.experience import Experience
 
 
 class MemoryStreamModule:
