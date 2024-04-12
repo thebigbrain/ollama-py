@@ -1,12 +1,13 @@
 from xlab.generative_agent.action import ActionPolicy
 from xlab.generative_agent.environment import Environment
 from xlab.generative_agent.memory_stream import Experience, MemoryStreamModule
+from xlab.generative_agent.perception import PerceptionModule
 
 
 class Agent:
     def __init__(
         self,
-        perception_module,
+        perception_module: PerceptionModule,
         memory_stream_module: MemoryStreamModule,
         action_policy: ActionPolicy,
     ):

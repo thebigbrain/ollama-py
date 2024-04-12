@@ -1,7 +1,7 @@
 from typing import Any
 import numpy as np
 
-from xlab.generative_agent.environment import EnvState
+from xlab.generative_agent.state import EnvState
 
 
 class Similarity:

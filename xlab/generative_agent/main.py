@@ -1,4 +1,4 @@
-from xlab.generative_agent.action import QLearningPolicy
+from xlab.generative_agent.action_policies import QLearningPolicy
 from xlab.generative_agent.memory_stream import MemoryStreamModule
 from xlab.generative_agent.perception import PerceptionModule
 from xlab.generative_agent.agent import Agent

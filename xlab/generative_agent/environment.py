@@ -1,5 +1,4 @@
-class EnvState:
-    pass
+from xlab.generative_agent.state import EnvState
 
 
 class Environment:
