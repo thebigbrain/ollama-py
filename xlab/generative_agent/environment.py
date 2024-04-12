@@ -1,3 +1,4 @@
+from xlab.generative_agent.action import Action
 from xlab.generative_agent.state import EnvState
 
 
@@ -9,7 +10,7 @@ class Environment:
     def get_current_state(self):
         return self.state
 
-    def take_step(self, action):
+    def take_step(self, action: Action):
         # Update the environment based on the action
         new_state = ...
         reward = ...
