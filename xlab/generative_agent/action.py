@@ -1,13 +1,17 @@
 import numpy as np
 
 
+class Action:
+    pass
+
+
 class ActionPolicy:
-    def take_action(self, memories, state):
+    def take_action(self, memories, state) -> Action:
         raise NotImplemented("action policy not implemented")
 
 
 class QLearningPolicy(ActionPolicy):
-    def take_action(self, memories, state):
+    def take_action(self, memories, state) -> Action:
         """
         Selects an action based on memories and current state using Q-learning.
 
@@ -39,7 +43,7 @@ class QLearningPolicy(ActionPolicy):
 
 
 class PolicyGradientActionPolicy(ActionPolicy):
-    def take_action(self, memories, state):
+    def take_action(self, memories, state) -> Action:
         """
         Selects an action based on memories and current state using a policy gradient method.
 
