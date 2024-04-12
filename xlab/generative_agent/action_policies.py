@@ -1,9 +1,10 @@
 import numpy as np
 from xlab.generative_agent.action import Action, ActionPolicy
+from .state import EnvState
 
 
 class QLearningPolicy(ActionPolicy):
-    def take_action(self, memories, state) -> Action:
+    def take_action(self, memories, state: EnvState) -> Action:
         """
         Selects an action based on memories and current state using Q-learning.
 
@@ -18,7 +19,7 @@ class QLearningPolicy(ActionPolicy):
         # Extract relevant information from memories (optional)
         # You can potentially analyze past rewards and actions from memories to inform decision-making.
 
-        # Access the Q-value table (assuming it's stored within the agent class)
+        # Access the Q-value table
         Q_table = self.Q_table
 
         # Get all possible actions (replace with your environment's action space definition)
