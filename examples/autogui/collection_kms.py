@@ -84,30 +84,31 @@ def detect_screen_change():
     detect_screen_change()
 
 
-# 创建键盘监听器
-keyboard_listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+if __name__ == "__main__":
+    # 创建键盘监听器
+    keyboard_listener = keyboard.Listener(on_press=on_press, on_release=on_release)
 
-# 创建鼠标监听器
-mouse_listener = mouse.Listener(on_move=on_move, on_click=on_click, on_scroll=on_scroll)
+    # 创建鼠标监听器
+    mouse_listener = mouse.Listener(
+        on_move=on_move, on_click=on_click, on_scroll=on_scroll
+    )
 
+    # 初始化屏幕变化检测
 
-# 初始化屏幕变化检测
+    # 启动监听器和线程
+    keyboard_listener.start()
+    mouse_listener.start()
 
-# 启动监听器和线程
-keyboard_listener.start()
-mouse_listener.start()
+    # 创建屏幕变化检测线程
+    screen_change_thread = threading.Thread(target=detect_screen_change, daemon=True)
+    screen_change_thread.start()
 
-# 创建屏幕变化检测线程
-screen_change_thread = threading.Thread(target=detect_screen_change)
-screen_change_thread.start()
+    # 循环获取事件
+    while True:
+        event = event_queue.get()
+        # print(event)
 
-# 循环获取事件
-while True:
-    event = event_queue.get()
-    # print(event)
-
-
-# 停止监听器和线程
-keyboard_listener.stop()
-mouse_listener.stop()
-screen_change_thread.join()
+    # 停止监听器和线程
+    keyboard_listener.stop()
+    mouse_listener.stop()
+    screen_change_thread.join()
