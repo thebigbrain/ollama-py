@@ -1,4 +1,7 @@
-class EnvState:
+import numpy as np
+
+
+class EnvState(np.array):
     pass
 
 

@@ -1,5 +1,6 @@
 import numpy as np
 
+from xlab.generative_agent.similarity import Similarity
 from xlab.generative_agent.state import EnvState
 from xlab.generative_agent.experience import Experience
 
@@ -40,37 +41,21 @@ class MemoryStreamModule:
 
 
 def retrieve_memories(
-    memory_stream: MemoryStream,
-    current_state,
-    recency_weight,
-    importance_weight,
-    relevance_weight,
-    step_number,
-    similarity,
-    K,
+        memory_stream: MemoryStream,
+        current_state :EnvState,
+        recency_weight,
+        importance_weight,
+        relevance_weight,
+        step_number,
+        similarity: Similarity,
+        K=10,
 ):
-    """
-    Retrieves relevant memories from the memory stream based on recency, importance, and relevance.
-
-    Args:
-        memory_stream: A list of experiences stored in the memory stream.
-            Each experience is a tuple of (perception, action, reward).
-        current_state: The current state of the environment.
-        recency_weight: Weight assigned to the recency of a memory.
-        importance_weight: Weight assigned to the importance of a memory (absolute value of reward).
-        relevance_weight: Weight assigned to the relevance of a memory (similarity to current state).
-        step_number: The current step number within the training process.
-
-    Returns:
-        A list of the top K most relevant memories based on the calculated relevance score.
-    """
-
     # Calculate relevance score for each memory
     relevance_scores = []
     for memory in memory_stream:
         # Calculate recency component
         recency_score = 1.0 / (
-            step_number - memory.reward
+                step_number - memory.reward
         )  # Assuming reward is at index 2
 
         # Calculate importance component
@@ -83,9 +68,9 @@ def retrieve_memories(
 
         # Calculate overall relevance score
         overall_score = (
-            recency_weight * recency_score
-            + importance_weight * importance_score
-            + relevance_weight * relevance_score
+                recency_weight * recency_score
+                + importance_weight * importance_score
+                + relevance_weight * relevance_score
         )
 
         relevance_scores.append((memory, overall_score))

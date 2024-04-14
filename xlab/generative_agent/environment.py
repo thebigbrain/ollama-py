@@ -23,3 +23,9 @@ class Environment:
     def is_episode_over(self):
         # Determine if the episode has ended
         return ...
+
+    def get_available_actions(self) -> int:
+        pass
+
+    def get_available_states(self) -> int:
+        pass
