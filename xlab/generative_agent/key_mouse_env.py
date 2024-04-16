@@ -32,19 +32,22 @@ class MouseKeyboardEnv(Environment):
         return len(self.action_space)
 
     def get_num_states(self) -> int:
-        return int(self.screen_width) * int(self.screen_height)
+        return 1000
+
+    def _get_state(self, x, y):
+        return np.array(
+            [
+                int(x / self.screen_width * self.get_num_states()),
+                int(y / self.screen_height * self.get_num_states()),
+            ]
+        )
 
     def reset(self):
         # Get current mouse position
         current_x, current_y = pyautogui.position()
 
         # Define initial state
-        state = np.array(
-            [
-                current_x / self.screen_width,
-                current_y / self.screen_height,
-            ]
-        )
+        state = self._get_state(current_x, current_y)
 
         self.state = state
 
@@ -74,12 +77,7 @@ class MouseKeyboardEnv(Environment):
         reward = -np.sqrt((current_x - 100) ** 2 + (current_y - 100) ** 2)
 
         # Define next state
-        next_state = np.array(
-            [
-                current_x / self.screen_width,
-                current_y / self.screen_height,
-            ]
-        )
+        next_state = self._get_state(current_x, current_y)
 
         return next_state, reward
 
