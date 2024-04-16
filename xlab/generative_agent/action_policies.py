@@ -6,7 +6,7 @@ from xlab.generative_agent.state import EnvState
 
 
 class EpsilonGreedyPolicy(ActionPolicy):
-    epsilon = 0.1
+    epsilon = 0.01
 
     def __init__(
         self, num_states: int, num_actions: int, alpha=0.2, gamma=0.9, epsilon=0.1
@@ -39,6 +39,7 @@ class EpsilonGreedyPolicy(ActionPolicy):
         for m in memories:
             self.update(m.perception, m.action, m.reward, m.next_state)
 
+        q_values = self.Q_table[state]
         # Epsilon-greedy exploration
         if np.random.rand() < self.epsilon:
             return np.random.choice(self.num_actions)
