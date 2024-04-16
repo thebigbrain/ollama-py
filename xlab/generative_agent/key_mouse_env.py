@@ -85,10 +85,7 @@ class MouseKeyboardEnv(Environment):
         # Determine if the episode has ended
         current_x = self.state[0]
         current_y = self.state[1]
-        return (
-            abs(current_x - 100 / self.screen_width) < 0.001
-            and abs(current_y - 100 / self.screen_height) < 0.001
-        )
+        return current_x == 100 and current_y == 100
 
     def render(self):
         # Simulate visual rendering (replace with your visualization method)
