@@ -1,8 +1,9 @@
 import numpy as np
 
 
-class EnvState(np.array):
-    pass
+class EnvState(np.ndarray):
+    def __new__(cls, *args, **kwargs):
+        return np.asarray(*args, **kwargs).view(cls)
 
 
 class Perception(EnvState):

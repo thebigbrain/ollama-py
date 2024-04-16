@@ -1,18 +1,18 @@
-from xlab.generative_agent.action_policies import EGreedyPolicy
+from xlab.generative_agent.action_policies import EpsilonGreedyPolicy
+from xlab.generative_agent.key_mouse_env import MouseKeyboardEnv
 from xlab.generative_agent.memory_stream import MemoryStreamModule
 from xlab.generative_agent.perception import PerceptionModule
 from xlab.generative_agent.agent import create_agent
-from xlab.generative_agent.environment import Environment
 
 
 if __name__ == "__main__":
     # Create an environment and agent modules
-    environment = Environment()
+    environment = MouseKeyboardEnv()
     agent = create_agent(
         environment=environment,
         perception_module=PerceptionModule(environment),
         memory_stream_module=MemoryStreamModule(),
-        action_policy=EGreedyPolicy(
+        action_policy=EpsilonGreedyPolicy(
             environment.get_available_states(), environment.get_available_actions()
         ),
     )

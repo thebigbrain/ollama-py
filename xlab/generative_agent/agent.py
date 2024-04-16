@@ -54,9 +54,11 @@ def create_agent(
     environment: Environment,
     perception_module: PerceptionModule,
     memory_stream_module: MemoryStreamModule,
+    action_policy: ActionPolicy,
 ):
     return Agent(
         environment=environment,
         perception_module=perception_module,
         memory_stream_module=memory_stream_module,
+        action_policy=action_policy,
     )

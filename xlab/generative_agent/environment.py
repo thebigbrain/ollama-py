@@ -3,9 +3,10 @@ from xlab.generative_agent.state import EnvState
 
 
 class Environment:
-    def __init__(self):
-        # Initialize the environment's state variables
-        self.state: EnvState = ...
+    state: EnvState
+
+    def reset():
+        pass
 
     def get_current_state(self):
         return self.state

@@ -1,11 +1,16 @@
 import pyautogui
 import numpy as np
 
+from xlab.generative_agent.environment import Environment
 
-class MouseKeyboardEnv:
+
+class MouseKeyboardEnv(Environment):
     def __init__(self):
+        super().__init__()
+
         self.screen_width = pyautogui.size()[0]
         self.screen_height = pyautogui.size()[1]
+
         self.action_space = [
             # Mouse movements
             ("move_left", -20, 0, False),
@@ -21,6 +26,14 @@ class MouseKeyboardEnv:
             ("press_space", ord(" "), 0, False),
         ]
 
+        self.reset()
+
+    def get_available_actions(self) -> int:
+        return len(self.action_space)
+
+    def get_available_states(self) -> int:
+        return int(self.screen_width / 5) * int(self.screen_height / 5)
+
     def reset(self):
         # Get current mouse position
         current_x, current_y = pyautogui.position()
@@ -33,9 +46,11 @@ class MouseKeyboardEnv:
             ]
         )
 
+        self.state = state
+
         return state
 
-    def step(self, action):
+    def take_step(self, action):
         # Extract action components
         action_name, dx, dy, click = action
 
@@ -66,10 +81,16 @@ class MouseKeyboardEnv:
             ]
         )
 
-        # Check if goal is reached
-        done = current_x == 100 and current_y == 100
+        return next_state, reward
 
-        return next_state, reward, done
+    def is_episode_over(self):
+        # Determine if the episode has ended
+        current_x = self.state[0]
+        current_y = self.state[1]
+        return (
+            abs(current_x - 100 / self.screen_width) < 0.001
+            and abs(current_y - 100 / self.screen_height) < 0.001
+        )
 
     def render(self):
         # Simulate visual rendering (replace with your visualization method)
@@ -84,9 +105,9 @@ if __name__ == "__main__":
         state = env.reset()
         i = np.random.choice(len(env.action_space))
         action = env.action_space[i]
-        next_state, reward, done = env.step(action)
+        next_state, reward, done = env.take_step(action)
         env.render()
 
-        if done:
+        if env.is_episode_over():
             print("Goal reached!")
             break

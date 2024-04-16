@@ -4,7 +4,9 @@ from xlab.generative_agent.experience import Experience
 
 
 class MemoryStream:
-    _stream: list[Experience]
+
+    def __init__(self) -> None:
+        self._stream: list[Experience] = []
 
     def add(self, experience: Experience):
         self._stream.append(experience)

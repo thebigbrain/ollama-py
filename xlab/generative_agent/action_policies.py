@@ -5,7 +5,7 @@ from xlab.generative_agent.experience import Experience
 from xlab.generative_agent.state import EnvState
 
 
-class EGreedyPolicy(ActionPolicy):
+class EpsilonGreedyPolicy(ActionPolicy):
     epsilon = 0.1
 
     def __init__(
