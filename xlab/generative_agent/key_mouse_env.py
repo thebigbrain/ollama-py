@@ -67,13 +67,14 @@ class MouseKeyboardEnv(Environment):
         new_x = max(0, min(new_x, self.screen_width))
         new_y = max(0, min(new_y, self.screen_height))
 
-        # Perform mouse action
-        pyautogui.moveTo(new_x, new_y)
-        if click:
-            pyautogui.click(button=action_name)
+        # pyautogui.moveTo(new_x, new_y)
+        # if click:
+        #     pyautogui.click(button=action_name)
 
-        # Get current mouse position
-        current_x, current_y = pyautogui.position()
+        # current_x, current_y = pyautogui.position()
+
+        current_x = new_x
+        current_y = new_y
 
         # Calculate reward (assuming some goal at (100, 100))
         reward = -np.sqrt((current_x - 100) ** 2 + (current_y - 100) ** 2)
