@@ -30,3 +30,6 @@ class Environment:
 
     def get_available_states(self) -> int:
         pass
+
+    def render(self):
+        pass
