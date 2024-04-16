@@ -1,6 +1,4 @@
-import numpy as np
-
-from xlab.generative_agent.similarity import Similarity
+from xlab.generative_agent.similarity import LinearSimilarity, Similarity
 from xlab.generative_agent.state import EnvState
 from xlab.generative_agent.experience import Experience
 
@@ -25,6 +23,7 @@ class MemoryStreamModule:
     def retrieve_memories(self, state: EnvState):
         return retrieve_memories(
             self.memory_stream,
+            state,
         )
 
     def form_long_term_plan(self):
@@ -41,21 +40,21 @@ class MemoryStreamModule:
 
 
 def retrieve_memories(
-        memory_stream: MemoryStream,
-        current_state :EnvState,
-        recency_weight,
-        importance_weight,
-        relevance_weight,
-        step_number,
-        similarity: Similarity,
-        K=10,
+    memory_stream: MemoryStream,
+    current_state: EnvState,
+    recency_weight=0.1,
+    importance_weight=0.1,
+    relevance_weight=0.1,
+    step_number=1,
+    similarity: Similarity = LinearSimilarity(),
+    K=10,
 ):
     # Calculate relevance score for each memory
     relevance_scores = []
     for memory in memory_stream:
         # Calculate recency component
         recency_score = 1.0 / (
-                step_number - memory.reward
+            step_number - memory.reward
         )  # Assuming reward is at index 2
 
         # Calculate importance component
@@ -68,9 +67,9 @@ def retrieve_memories(
 
         # Calculate overall relevance score
         overall_score = (
-                recency_weight * recency_score
-                + importance_weight * importance_score
-                + relevance_weight * relevance_score
+            recency_weight * recency_score
+            + importance_weight * importance_score
+            + relevance_weight * relevance_score
         )
 
         relevance_scores.append((memory, overall_score))

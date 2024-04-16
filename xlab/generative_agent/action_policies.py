@@ -1,25 +1,28 @@
+from typing import List
 import numpy as np
 from xlab.generative_agent.action import Action, ActionPolicy
-from xlab.generative_agent.environment import Environment
+from xlab.generative_agent.experience import Experience
 from xlab.generative_agent.state import EnvState
 
 
 class EGreedyPolicy(ActionPolicy):
     epsilon = 0.1
 
-    def __init__(self, environment: Environment, alpha=0.2, gamma=0.9, epsilon=0.1):
+    def __init__(
+        self, num_states: int, num_actions: int, alpha=0.2, gamma=0.9, epsilon=0.1
+    ):
         super().__init__()
-        self.environment = environment
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
 
-        # Initialize Q-table with zeros
-        self.Q_table = np.zeros(
-            (environment.get_available_states(), environment.get_available_actions())
-        )
+        self.num_actions = num_actions
+        self.num_states = num_states
 
-    def take_action(self, memories, state: EnvState) -> Action:
+        # Initialize Q-table with zeros
+        self.Q_table = np.zeros((num_states, num_actions))
+
+    def take_action(self, memories: List[Experience], state: EnvState) -> Action:
         """
         Selects an action based on memories and current state using Q-learning.
 
@@ -33,10 +36,12 @@ class EGreedyPolicy(ActionPolicy):
 
         # Extract relevant information from memories (optional)
         # You can potentially analyze past rewards and actions from memories to inform decision-making.
+        for m in memories:
+            self.update(m.perception, m.action, m.reward, m.next_state)
 
         # Epsilon-greedy exploration
         if np.random.rand() < self.epsilon:
-            return np.random.choice(self.environment.get_available_actions())
+            return np.random.choice(self.num_actions)
 
         # Select action with highest Q-value
         q_values = self.Q_table[state]
