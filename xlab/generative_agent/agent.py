@@ -1,24 +1,21 @@
-from xlab.generative_agent.action import  Action
+from xlab.generative_agent.action import Action, ActionPolicy
 from xlab.generative_agent.environment import Environment
 from xlab.generative_agent.memory_stream import Experience, MemoryStreamModule
 from xlab.generative_agent.perception import PerceptionModule
-from xlab.generative_agent.state import EnvState
 
 
 class Agent:
     def __init__(
-            self,
-            environment: Environment,
-            perception_module: PerceptionModule,
-            memory_stream_module: MemoryStreamModule,
+        self,
+        environment: Environment,
+        perception_module: PerceptionModule,
+        memory_stream_module: MemoryStreamModule,
+        action_policy: ActionPolicy,
     ):
         self.environment = environment
         self.perception_module = perception_module
         self.memory_stream_module = memory_stream_module
-
-    def take_action(self, memories, state: EnvState) -> Action:
-        # Agent takes an action based on memories and current state
-        pass
+        self.action_policy = action_policy
 
     def learn(self, num_episodes=1000, max_steps_per_episode=200):
         # Run the agent in the environment and learn from experiences
@@ -31,7 +28,7 @@ class Agent:
                 memories = self.memory_stream_module.retrieve_memories(state)
 
                 # Agent takes an action based on memories and current state
-                action = self.take_action(memories, state)
+                action = self.action_policy.take_action(memories, state)
 
                 # Environment updates and provides reward
                 new_state, reward = self.environment.take_step(action)
@@ -53,10 +50,11 @@ class Agent:
                     break
 
 
-def create_agent(environment: Environment,
-                 perception_module: PerceptionModule,
-                 memory_stream_module: MemoryStreamModule,
- ):
+def create_agent(
+    environment: Environment,
+    perception_module: PerceptionModule,
+    memory_stream_module: MemoryStreamModule,
+):
     return Agent(
         environment=environment,
         perception_module=perception_module,

@@ -4,7 +4,7 @@ from xlab.generative_agent.environment import Environment
 from xlab.generative_agent.state import EnvState
 
 
-class QLearningPolicy(ActionPolicy):
+class EGreedyPolicy(ActionPolicy):
     epsilon = 0.1
 
     def __init__(self, environment: Environment, alpha=0.2, gamma=0.9, epsilon=0.1):
@@ -15,7 +15,9 @@ class QLearningPolicy(ActionPolicy):
         self.epsilon = epsilon
 
         # Initialize Q-table with zeros
-        self.Q_table = np.zeros((environment.get_available_states(), environment.get_available_actions()))
+        self.Q_table = np.zeros(
+            (environment.get_available_states(), environment.get_available_actions())
+        )
 
     def take_action(self, memories, state: EnvState) -> Action:
         """
@@ -45,7 +47,9 @@ class QLearningPolicy(ActionPolicy):
         # Q-learning update rule
         current_q_value = self.Q_table[state, action]
         next_q_value_max = np.max(self.Q_table[next_state])
-        new_q_value = current_q_value + self.alpha * (reward + self.gamma * next_q_value_max - current_q_value)
+        new_q_value = current_q_value + self.alpha * (
+            reward + self.gamma * next_q_value_max - current_q_value
+        )
         self.Q_table[state, action] = new_q_value
 
 
