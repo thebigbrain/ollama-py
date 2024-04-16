@@ -25,10 +25,10 @@ class Environment:
         # Determine if the episode has ended
         return ...
 
-    def get_available_actions(self) -> int:
+    def get_num_actions(self) -> int:
         pass
 
-    def get_available_states(self) -> int:
+    def get_num_states(self) -> int:
         pass
 
     def render(self):

@@ -28,11 +28,11 @@ class MouseKeyboardEnv(Environment):
 
         self.reset()
 
-    def get_available_actions(self) -> int:
+    def get_num_actions(self) -> int:
         return len(self.action_space)
 
-    def get_available_states(self) -> int:
-        return int(self.screen_width / 5) * int(self.screen_height / 5)
+    def get_num_states(self) -> int:
+        return int(self.screen_width) * int(self.screen_height)
 
     def reset(self):
         # Get current mouse position

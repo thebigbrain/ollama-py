@@ -13,7 +13,7 @@ if __name__ == "__main__":
         perception_module=PerceptionModule(environment),
         memory_stream_module=MemoryStreamModule(),
         action_policy=EpsilonGreedyPolicy(
-            environment.get_available_states(), environment.get_available_actions()
+            environment.get_num_states(), environment.get_num_actions()
         ),
     )
 
