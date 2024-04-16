@@ -29,7 +29,6 @@ class Agent:
 
                 # Agent takes an action based on memories and current state
                 action = self.action_policy.take_action(memories, state)
-                print("action", action)
 
                 # Environment updates and provides reward
                 new_state, reward = self.environment.take_step(action)

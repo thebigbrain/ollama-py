@@ -1,4 +1,4 @@
-class Action:
+class Action(int):
     pass
 
 

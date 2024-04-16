@@ -1,6 +1,7 @@
 import pyautogui
 import numpy as np
 
+from xlab.generative_agent.action import Action
 from xlab.generative_agent.environment import Environment
 
 
@@ -53,8 +54,9 @@ class MouseKeyboardEnv(Environment):
 
         return state
 
-    def take_step(self, action):
+    def take_step(self, action_index: Action):
         # Extract action components
+        action = self.action_space[action_index]
         action_name, dx, dy, click = action
 
         # Update mouse position
