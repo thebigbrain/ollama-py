@@ -1,4 +1,3 @@
-from xlab.generative_agent.action_policies import QLearningPolicy
 from xlab.generative_agent.memory_stream import MemoryStreamModule
 from xlab.generative_agent.perception import PerceptionModule
 from xlab.generative_agent.agent import create_agent
@@ -12,7 +11,6 @@ if __name__ == "__main__":
         environment=environment,
         perception_module=PerceptionModule(environment),
         memory_stream_module=MemoryStreamModule(),
-        action_policy=QLearningPolicy(environment)
     )
 
     agent.learn()

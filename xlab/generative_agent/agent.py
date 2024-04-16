@@ -1,4 +1,4 @@
-from xlab.generative_agent.action import ActionPolicy, Action
+from xlab.generative_agent.action import  Action
 from xlab.generative_agent.environment import Environment
 from xlab.generative_agent.memory_stream import Experience, MemoryStreamModule
 from xlab.generative_agent.perception import PerceptionModule
@@ -11,12 +11,10 @@ class Agent:
             environment: Environment,
             perception_module: PerceptionModule,
             memory_stream_module: MemoryStreamModule,
-            action_policy: ActionPolicy,
     ):
         self.environment = environment
         self.perception_module = perception_module
         self.memory_stream_module = memory_stream_module
-        self.action_policy = action_policy
 
     def take_action(self, memories, state: EnvState) -> Action:
         # Agent takes an action based on memories and current state
@@ -58,10 +56,9 @@ class Agent:
 def create_agent(environment: Environment,
                  perception_module: PerceptionModule,
                  memory_stream_module: MemoryStreamModule,
-                 action_policy: ActionPolicy, ):
+ ):
     return Agent(
         environment=environment,
         perception_module=perception_module,
         memory_stream_module=memory_stream_module,
-        action_policy=action_policy,
     )
