@@ -22,6 +22,7 @@ class Agent:
         for episode in range(num_episodes):
             # Agent perceives the environment
             state = self.environment.get_current_state()
+            print("episode", episode)
 
             for step in range(max_steps_per_episode):
                 # Agent retrieves relevant memories
