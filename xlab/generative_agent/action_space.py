@@ -74,7 +74,11 @@ class ComprehensiveActionSpace:
 if __name__ == "__main__":
     # 使用这个类
     action_space = ComprehensiveActionSpace()
-    action_space.print_action_space()
+    # 用户的键盘输入
+    user_input = "A"
 
-    # 获取行动空间列表
-    actions = action_space.get_action_space()
+    # 找到该行为在行动空间中的位置，此处 index 就是把行为转化成的动作
+    index = action_space.get_action_space().index(user_input)
+
+    # 打印动作
+    print(f"Action for input {user_input} is: {index}")
