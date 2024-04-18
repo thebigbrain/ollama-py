@@ -17,6 +17,15 @@ class Agent:
         self.memory_stream_module = memory_stream_module
         self.action_policy = action_policy
 
+    def take_action(self, state):
+        # Agent retrieves relevant memories
+        memories = self.memory_stream_module.retrieve_memories(state)
+
+        # Agent takes an action based on memories and current state
+        action = self.action_policy.take_action(memories, state)
+
+        return action
+
     def learn(self, num_episodes=1000, max_steps_per_episode=200):
         # Run the agent in the environment and learn from experiences
         for episode in range(num_episodes):
@@ -25,11 +34,7 @@ class Agent:
             print("episode", episode)
 
             for step in range(max_steps_per_episode):
-                # Agent retrieves relevant memories
-                memories = self.memory_stream_module.retrieve_memories(state)
-
-                # Agent takes an action based on memories and current state
-                action = self.action_policy.take_action(memories, state)
+                action = self.take_action(state)
 
                 # Environment updates and provides reward
                 new_state, reward = self.environment.take_step(action)
