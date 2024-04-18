@@ -1,7 +1,5 @@
-from tkinter import NO
 import pyautogui
 import numpy as np
-from regex import W
 
 from xlab.generative_agent.action import Action
 from xlab.generative_agent.environment import Environment
