@@ -15,6 +15,12 @@ class MouseKeyboardEnv(Environment):
         self.screen_width, self.screen_height = pyautogui.size()
 
         self.grid = (1000, 800)
+        self.grid_size = calculate_grid_size(
+            screen_width=self.screen_width,
+            screen_height=self.screen_height,
+            grid_rows=self.grid[0],
+            grid_cols=self.grid[1],
+        )
 
         self.action_space = [
             # Mouse movements
@@ -40,14 +46,7 @@ class MouseKeyboardEnv(Environment):
         return self.grid[0] * self.grid[1]
 
     def _get_state(self, x, y):
-        grid_rows, grid_cols = self.grid
-
-        grid_width, grid_height = calculate_grid_size(
-            screen_width=self.screen_width,
-            screen_height=self.screen_height,
-            grid_rows=grid_rows,
-            grid_cols=grid_cols,
-        )
+        grid_width, grid_height = self.grid_size
 
         return np.array(
             [
