@@ -46,9 +46,9 @@ class Agent:
                 # Agent transitions to the new state
                 state = new_state
 
-            # Check if an episode is over
-            if self.environment.is_episode_over():
-                break
+                # Check if an episode is over
+                if self.environment.is_episode_over():
+                    break
 
 
 def create_agent(
