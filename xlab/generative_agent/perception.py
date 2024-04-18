@@ -7,5 +7,4 @@ class PerceptionModule:
 
     def perceive(self):
         # Gather sensory data from the environment
-        state = self.environment.get_current_state()
-        return state
+        return self.environment.state

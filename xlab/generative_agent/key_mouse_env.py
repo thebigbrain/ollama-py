@@ -1,16 +1,22 @@
+from tkinter import NO
 import pyautogui
 import numpy as np
+from regex import W
 
 from xlab.generative_agent.action import Action
 from xlab.generative_agent.environment import Environment
+from xlab.generative_agent.grid import calculate_grid_size
 
 
 class MouseKeyboardEnv(Environment):
+    position = None
+
     def __init__(self):
         super().__init__()
 
-        self.screen_width = pyautogui.size()[0]
-        self.screen_height = pyautogui.size()[1]
+        self.screen_width, self.screen_height = pyautogui.size()
+
+        self.grid = (1000, 800)
 
         self.action_space = [
             # Mouse movements
@@ -32,78 +38,75 @@ class MouseKeyboardEnv(Environment):
     def get_num_actions(self) -> int:
         return len(self.action_space)
 
-    def get_num_states(self) -> int:
-        return 1000
+    def get_num_states(self):
+        return self.grid[0] * self.grid[1]
 
     def _get_state(self, x, y):
+        grid_rows, grid_cols = self.grid
+
+        grid_width, grid_height = calculate_grid_size(
+            screen_width=self.screen_width,
+            screen_height=self.screen_height,
+            grid_rows=grid_rows,
+            grid_cols=grid_cols,
+        )
+
         return np.array(
             [
-                int(x / self.screen_width * self.get_num_states()),
-                int(y / self.screen_height * self.get_num_states()),
+                int(x // grid_height),
+                int(y // grid_width),
             ]
         )
 
     def reset(self):
         # Get current mouse position
-        current_x, current_y = pyautogui.position()
+        self.position = pyautogui.position()
 
         # Define initial state
-        state = self._get_state(current_x, current_y)
+        self.state = self._get_state(self.position[0], self.position[1])
 
-        self.state = state
-
-        return state
-
-    def take_step(self, action_index: Action):
+    def take_step(self, action: Action):
         # Extract action components
-        action = self.action_space[action_index]
-        action_name, dx, dy, click = action
+        action_info = self.action_space[action]
+        action_name, dx, dy, click = action_info
+
+        x, y = self.position
 
         # Update mouse position
-        new_x = pyautogui.position()[0] + dx
-        new_y = pyautogui.position()[1] + dy
+        new_x = x + dx
+        new_y = y + dy
 
         # Clip mouse position within screen boundaries
         new_x = max(0, min(new_x, self.screen_width))
         new_y = max(0, min(new_y, self.screen_height))
 
-        # pyautogui.moveTo(new_x, new_y)
-        # if click:
-        #     pyautogui.click(button=action_name)
+        self.position = (new_x, new_y)
 
-        # current_x, current_y = pyautogui.position()
+        self.state = self._get_state(new_x, new_y)
 
-        current_x = new_x
-        current_y = new_y
+        return self.state, self.get_reward()
 
-        # Calculate reward (assuming some goal at (100, 100))
-        reward = -np.sqrt((current_x - 100) ** 2 + (current_y - 100) ** 2)
-
-        # Define next state
-        next_state = self._get_state(current_x, current_y)
-
-        return next_state, reward
+    def get_reward(self):
+        reward = -np.sqrt((self.state[0] - 100) ** 2 + (self.state[1] - 100) ** 2)
+        return reward
 
     def is_episode_over(self):
         # Determine if the episode has ended
-        current_x = self.state[0]
-        current_y = self.state[1]
-        return current_x == 100 and current_y == 100
+        return self.state[0] == 100 and self.state[1] == 100
 
     def render(self):
         # Simulate visual rendering (replace with your visualization method)
-        print("Current mouse position:", pyautogui.position())
+        print("Current mouse position:", self.position)
 
 
 if __name__ == "__main__":
     env = MouseKeyboardEnv()
 
     # Example usage
-    for _ in range(100):
-        state = env.reset()
-        i = np.random.choice(len(env.action_space))
-        action = env.action_space[i]
-        next_state, reward, done = env.take_step(action)
+    for _ in range(100000):
+        env.reset()
+        action = np.random.choice(env.get_num_actions())
+        next_state, reward = env.take_step(action)
         env.render()
 
         if env.is_episode_over():

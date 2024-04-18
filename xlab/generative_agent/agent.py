@@ -21,7 +21,7 @@ class Agent:
         # Run the agent in the environment and learn from experiences
         for episode in range(num_episodes):
             # Agent perceives the environment
-            state = self.environment.get_current_state()
+            state = self.environment.state
             print("episode", episode)
 
             for step in range(max_steps_per_episode):

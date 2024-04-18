@@ -8,9 +8,6 @@ class Environment:
     def reset():
         pass
 
-    def get_current_state(self):
-        return self.state
-
     def take_step(self, action: Action):
         # Update the environment based on the action
         new_state = ...
@@ -21,6 +18,9 @@ class Environment:
 
         return new_state, reward
 
+    def get_reward(self):
+        pass
+
     def is_episode_over(self):
         # Determine if the episode has ended
         return ...
@@ -28,7 +28,7 @@ class Environment:
     def get_num_actions(self) -> int:
         pass
 
-    def get_num_states(self) -> int:
+    def get_num_states(self) -> tuple[int, int]:
         pass
 
     def render(self):
