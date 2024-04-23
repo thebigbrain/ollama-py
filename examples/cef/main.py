@@ -7,9 +7,7 @@ def main():
     cef.Initialize()
 
     # 创建新的浏览器窗口
-    cef.CreateBrowserSync(
-        url="https://www.example.com", window_title="Hello CEF Python!"
-    )
+    cef.CreateBrowserSync(url="https://www.bing.com", window_title="Hello CEF Python!")
 
     # 进入消息循环
     cef.MessageLoop()
