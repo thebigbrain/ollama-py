@@ -5,7 +5,7 @@ from xlab.generative_agent.state import EnvState
 class Environment:
     state: EnvState
 
-    def reset():
+    def reset(self):
         pass
 
     def take_step(self, action: Action):
